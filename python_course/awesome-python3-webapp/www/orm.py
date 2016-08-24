@@ -10,8 +10,8 @@ import aiomysql
 def log(sql, args=()):
     logging.info('SQL: %s' % sql)
 
-@asyncio.coroutine
-def create_pool(loop, **kw):
+
+async def create_pool(loop, **kw):
     logging.info('create database connection pool...')
     global __pool
     __pool = await aiomysql.create_pool(
@@ -27,8 +27,8 @@ def create_pool(loop, **kw):
         loop=loop
     )
 
-@asyncio.coroutine
-def select(sql, args, size=None):
+
+async def select(sql, args, size=None):
     log(sql, args)
     global __pool
     async with __pool.get() as conn:
@@ -41,8 +41,8 @@ def select(sql, args, size=None):
         logging.info('rows returned: %s' % len(rs))
         return rs
 
-@asyncio.coroutine
-def execute(sql, args, autocommit=True):
+
+async def execute(sql, args, autocommit=True):
     log(sql)
     async with __pool.get() as conn:
         if not autocommit:
